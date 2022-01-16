@@ -25,6 +25,7 @@ export function useCurrencyData() {
 }
 
 export async function fetchCurrencyData(): Promise<ApiResponse> {
+  // TODO parametrize URL
   const res = await fetch(
     "https://run.mocky.io/v3/c88db14a-3128-4fbd-af74-1371c5bb0343"
   );
@@ -40,11 +41,12 @@ function processCurrencyData(rawData: ApiResponse_unprocessed): ApiResponse {
     currencies: [],
   };
 
+  // TODO spec accepted currencies
+  // TODO move to utils
   const validateCurrencyEntry = (fxEntry: FxEntry_unprocessed) => {
     if (!fxEntry.nameI18N) {
       // TODO send telemetry for invalid data
       // console.warn(`currency ${fxEntry.currency} has no display name`);
-      return false;
     }
 
     if (!fxEntry.exchangeRate) {
