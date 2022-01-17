@@ -40,6 +40,7 @@ function App() {
           label={strings.search}
           onChange={(e, value) => setFilter(value)}
           defaultValue={filter}
+          itemCount={currencies.length}
         />
 
         <div role="status">

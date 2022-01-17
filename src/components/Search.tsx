@@ -25,6 +25,9 @@ export function Search(props: SearchProps) {
         name="search"
         onChange={onChange}
       />
+      {props.itemCount && term && (
+        <span role="status">{props.itemCount} items found</span>
+      )}
     </div>
   );
 }
@@ -33,4 +36,5 @@ export interface SearchProps {
   label: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>, value: string) => void;
   defaultValue: string;
+  itemCount: number;
 }

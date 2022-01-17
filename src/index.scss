@@ -61,10 +61,11 @@ header {
   top: 0;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   & .search {
-    & label {
-      margin-right: $spacer;
-    }
+    display: flex;
+    gap: 5px;
+    align-items: center;
   }
 }
