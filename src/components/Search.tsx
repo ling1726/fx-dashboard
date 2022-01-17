@@ -1,8 +1,10 @@
 import * as React from "react";
 import { useId } from "../utils/useId";
+import { useStrings } from "../utils/useStrings";
 
 export function Search(props: SearchProps) {
   const id = useId("search");
+  const strings = useStrings();
   const [term, setTerm] = React.useState(props.defaultValue);
 
   const onChange = React.useCallback(
@@ -26,7 +28,7 @@ export function Search(props: SearchProps) {
         onChange={onChange}
       />
       {props.itemCount && term && (
-        <span role="status">{props.itemCount} items found</span>
+        <span role="status">{strings.itemsFound(props.itemCount)}</span>
       )}
     </div>
   );

@@ -43,7 +43,7 @@ function App() {
           itemCount={currencies.length}
         />
 
-        <div role="status">
+        <div>
           {strings.lastUpdated}: {data.lastUpdated.toLocaleDateString()}
         </div>
       </div>

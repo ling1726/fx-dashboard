@@ -4,5 +4,6 @@ export function useStrings(locale: string = "en-us") {
     title: "George FE Test",
     lastUpdated: "Last updated",
     search: "Search",
+    itemsFound: (itemCount: number) => `${itemCount} items found`,
   } as const;
 }
