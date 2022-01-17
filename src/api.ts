@@ -16,12 +16,13 @@ export function useCurrencyData() {
         setError(false);
         setData(data);
       } catch (e) {
+        telemetry.error((e as Error).message);
         setError(true);
       }
     };
 
     fetch();
-  }, []);
+  }, [telemetry]);
 
   return [loading, data, error] as const;
 }
@@ -33,6 +34,12 @@ export async function fetchCurrencyData(
   const res = await fetch(
     "https://run.mocky.io/v3/c88db14a-3128-4fbd-af74-1371c5bb0343"
   );
+
+  if (res.status > 200) {
+    const message = await res.text();
+    throw new Error(`Fetch failed with error ${res.status}: ${message}`);
+  }
+
   const data: ApiResponse_unprocessed = await res.json();
   return processCurrencyData(data, telemetry);
 }
