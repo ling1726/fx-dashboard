@@ -1,11 +1,11 @@
-# TODO
+# FX currency dashboard
 
-- URL hash and deep link search ✅
-- intl strings
-- css vars
-- parametrize currency
-- backup flag
-- hover effects on listitems
-- round numbers to 2 decimal places ✅
-- toggle button for buy/sell
-- do all rounding, locale strings in api layer
+## Setup
+
+- npm install
+
+## Usage
+
+- npm start
+- npm test
+- npm run build
