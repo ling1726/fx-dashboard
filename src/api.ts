@@ -1,7 +1,9 @@
 import * as React from "react";
 import parseISO from "date-fns/parseISO";
+import { Telemetry, useTelemetry } from "./utils";
 
 export function useCurrencyData() {
+  const telemetry = useTelemetry();
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(true);
   const [data, setData] = React.useState<ApiResponse | undefined>(undefined);
@@ -9,7 +11,7 @@ export function useCurrencyData() {
   React.useEffect(() => {
     const fetch = async () => {
       try {
-        const data = await fetchCurrencyData();
+        const data = await fetchCurrencyData(telemetry);
         setLoading(false);
         setError(false);
         setData(data);
@@ -24,16 +26,21 @@ export function useCurrencyData() {
   return [loading, data, error] as const;
 }
 
-export async function fetchCurrencyData(): Promise<ApiResponse> {
+export async function fetchCurrencyData(
+  telemetry: Telemetry
+): Promise<ApiResponse> {
   // TODO parametrize URL
   const res = await fetch(
     "https://run.mocky.io/v3/c88db14a-3128-4fbd-af74-1371c5bb0343"
   );
   const data: ApiResponse_unprocessed = await res.json();
-  return processCurrencyData(data);
+  return processCurrencyData(data, telemetry);
 }
 
-function processCurrencyData(rawData: ApiResponse_unprocessed): ApiResponse {
+function processCurrencyData(
+  rawData: ApiResponse_unprocessed,
+  telemetry: Telemetry
+): ApiResponse {
   const processed: ApiResponse = {
     ...rawData,
     comparisonDate: parseISO(rawData.comparisonDate),
@@ -45,14 +52,12 @@ function processCurrencyData(rawData: ApiResponse_unprocessed): ApiResponse {
   // TODO move to utils
   const validateCurrencyEntry = (fxEntry: FxEntry_unprocessed) => {
     if (!fxEntry.nameI18N) {
-      // TODO send telemetry for invalid data
-      // console.warn(`currency ${fxEntry.currency} has no display name`);
+      telemetry.error(`currency ${fxEntry.currency} has no display name`);
       return false;
     }
 
     if (!fxEntry.exchangeRate) {
-      // TODO send telemetry for invalid data
-      // console.warn(`currency ${fxEntry.currency} has no exchange rate`);
+      telemetry.error(`currency ${fxEntry.currency} has no exchange rate`);
       return false;
     }
 

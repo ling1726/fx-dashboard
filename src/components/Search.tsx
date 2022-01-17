@@ -1,6 +1,5 @@
 import * as React from "react";
-import { useId } from "../utils/useId";
-import { useStrings } from "../utils/useStrings";
+import { useId, useStrings } from "../utils";
 
 export function Search(props: SearchProps) {
   const id = useId("search");

@@ -1,8 +1,7 @@
 import React from "react";
 import { useCurrencyData } from "./api";
-import { CurrencyEntry } from "./components/CurrenyEntry";
-import { Search } from "./components/Search";
-import { useStrings } from "./utils/useStrings";
+import { Search, CurrencyEntry } from "./components";
+import { useStrings } from "./utils";
 
 function App() {
   const strings = useStrings();
