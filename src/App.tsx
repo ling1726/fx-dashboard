@@ -14,10 +14,14 @@ function App() {
     window.location.hash = filter;
   }, [filter]);
 
-  if (loading || !data || error) {
-    // TODO spec loading page
-    // TODO spec error page
-    return null;
+  // TODO spec loading page
+  if (loading) {
+    return <div>{strings.loading}</div>;
+  }
+
+  // TODO spec error page
+  if (error || !data) {
+    return <div>{strings.error}</div>;
   }
 
   // TODO get more specs on search constraints
@@ -52,7 +56,7 @@ function App() {
             return (
               <CurrencyEntry
                 key={entry.currency}
-                targetCurrency="EUR"
+                targetCurrency={data.baseCurrency}
                 ticker={entry.currency}
                 name={entry.nameI18N}
                 // TODO should we use buy or sell price ?

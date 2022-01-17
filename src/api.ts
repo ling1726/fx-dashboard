@@ -5,7 +5,7 @@ import { Telemetry, useTelemetry } from "./utils";
 export function useCurrencyData() {
   const telemetry = useTelemetry();
   const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState(true);
+  const [error, setError] = React.useState(false);
   const [data, setData] = React.useState<ApiResponse | undefined>(undefined);
 
   React.useEffect(() => {
@@ -27,13 +27,12 @@ export function useCurrencyData() {
   return [loading, data, error] as const;
 }
 
-export async function fetchCurrencyData(
-  telemetry: Telemetry
-): Promise<ApiResponse> {
-  // TODO parametrize URL
-  const res = await fetch(
-    "https://run.mocky.io/v3/c88db14a-3128-4fbd-af74-1371c5bb0343"
-  );
+async function fetchCurrencyData(telemetry: Telemetry): Promise<ApiResponse> {
+  if (!process.env.REACT_APP_API_URL) {
+    throw new Error("API_URL is undefined");
+  }
+
+  const res = await fetch(process.env.REACT_APP_API_URL);
 
   if (res.status > 200) {
     const message = await res.text();
@@ -56,7 +55,6 @@ function processCurrencyData(
   };
 
   // TODO spec accepted currencies
-  // TODO move to utils
   const validateCurrencyEntry = (fxEntry: FxEntry_unprocessed) => {
     if (!fxEntry.nameI18N) {
       telemetry.error(`currency ${fxEntry.currency} has no display name`);
@@ -65,6 +63,13 @@ function processCurrencyData(
 
     if (!fxEntry.exchangeRate) {
       telemetry.error(`currency ${fxEntry.currency} has no exchange rate`);
+      return false;
+    }
+
+    if (fxEntry.precision < 2) {
+      telemetry.error(
+        `currency ${fxEntry.currency} has a precision less than 2`
+      );
       return false;
     }
 
@@ -118,7 +123,7 @@ export interface CurrencyRate
   lastModified: Date;
 }
 
-interface ApiResponse_unprocessed {
+export interface ApiResponse_unprocessed {
   baseCurrency: string;
   comparisonDate: string;
   institute: number;
@@ -126,7 +131,7 @@ interface ApiResponse_unprocessed {
   fx: FxEntry_unprocessed[];
 }
 
-interface FxEntry_unprocessed {
+export interface FxEntry_unprocessed {
   currency: string;
   flags: string[];
   nameI18N: string;
@@ -135,7 +140,7 @@ interface FxEntry_unprocessed {
   exchangeRate: CurrencyRate_unprocessed;
 }
 
-interface CurrencyRate_unprocessed {
+export interface CurrencyRate_unprocessed {
   buy: number;
   middle: number;
   sell: number;
@@ -143,5 +148,5 @@ interface CurrencyRate_unprocessed {
   lastModified: string;
 }
 
-// No concrete documentation on what can be in the flags, update as necessary
+// TODO get spec on currency flags, currently just what is returned by current API call
 export type CurrencyFlags = "provided" | "tradingProhibited";
