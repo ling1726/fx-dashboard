@@ -47,6 +47,7 @@ function processCurrencyData(rawData: ApiResponse_unprocessed): ApiResponse {
     if (!fxEntry.nameI18N) {
       // TODO send telemetry for invalid data
       // console.warn(`currency ${fxEntry.currency} has no display name`);
+      return false;
     }
 
     if (!fxEntry.exchangeRate) {

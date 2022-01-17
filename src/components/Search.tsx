@@ -16,11 +16,15 @@ export function Search(props: SearchProps) {
   );
 
   return (
-    <div>
-      <label style={{ marginRight: 10 }} htmlFor={id}>
-        {props.label}
-      </label>
-      <input id={id} value={term} type="text" onChange={onChange} />
+    <div role="search" className="search">
+      <label htmlFor={id}>{props.label}</label>
+      <input
+        id={id}
+        value={term}
+        type="search"
+        name="search"
+        onChange={onChange}
+      />
     </div>
   );
 }

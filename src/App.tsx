@@ -1,5 +1,4 @@
 import React from "react";
-import "./App.scss";
 import { useCurrencyData } from "./api";
 import { CurrencyEntry } from "./components/CurrenyEntry";
 import { Search } from "./components/Search";
@@ -7,7 +6,7 @@ import { useStrings } from "./utils/useStrings";
 
 function App() {
   const strings = useStrings();
-  const [loading, data] = useCurrencyData();
+  const [loading, data, error] = useCurrencyData();
   const [filter, setFilter] = React.useState(() =>
     decodeURI(window.location.hash.slice(1))
   );
@@ -16,7 +15,7 @@ function App() {
     window.location.hash = filter;
   }, [filter]);
 
-  if (loading || !data) {
+  if (loading || !data || error) {
     // TODO spec loading page
     // TODO spec error page
     return null;
@@ -32,36 +31,38 @@ function App() {
   );
 
   return (
-    <div>
+    <>
       <header>
         <h1>{strings.title}</h1>
       </header>
-      <div className="searchbar">
+      <div role="presentation" className="toolbar">
         <Search
           label={strings.search}
           onChange={(e, value) => setFilter(value)}
           defaultValue={filter}
         />
 
-        <div>
+        <div role="status">
           {strings.lastUpdated}: {data.lastUpdated.toLocaleDateString()}
         </div>
       </div>
-      <div role="list" style={{ padding: "10px 10px" }}>
-        {currencies.map((entry) => {
-          return (
-            <CurrencyEntry
-              key={entry.currency}
-              targetCurrency="EUR"
-              ticker={entry.currency}
-              name={entry.nameI18N}
-              // TODO should we use buy or sell price ?
-              exchangeRate={entry.exchangeRate.buy.toFixed(2)}
-            />
-          );
-        })}
-      </div>
-    </div>
+      <main>
+        <div role="list" className="currency-list">
+          {currencies.map((entry) => {
+            return (
+              <CurrencyEntry
+                key={entry.currency}
+                targetCurrency="EUR"
+                ticker={entry.currency}
+                name={entry.nameI18N}
+                // TODO should we use buy or sell price ?
+                exchangeRate={entry.exchangeRate.buy.toFixed(2)}
+              />
+            );
+          })}
+        </div>
+      </main>
+    </>
   );
 }
 

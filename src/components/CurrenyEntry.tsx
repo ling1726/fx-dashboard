@@ -2,22 +2,9 @@ import * as React from "react";
 
 export function CurrencyEntry(props: CurrencyEntryProps) {
   return (
-    <div
-      role="listitem"
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        margin: "5px 0",
-        padding: "10px 10px",
-        border: "1px solid black",
-        borderRadius: "4px",
-      }}
-      title={props.name}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+    <div role="listitem" className="currency-list__item" title={props.name}>
+      <div>
         <img
-          style={{ width: 70, height: 47 }}
           aria-hidden
           alt={props.name}
           src={`/flags/${props.ticker.toLocaleLowerCase().slice(0, 2)}.png`}
