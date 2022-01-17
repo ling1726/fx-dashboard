@@ -26,7 +26,7 @@ export function Search(props: SearchProps) {
         name="search"
         onChange={onChange}
       />
-      {props.itemCount && term && (
+      {term.length > 0 && (
         <span role="status">{strings.itemsFound(props.itemCount)}</span>
       )}
     </div>
